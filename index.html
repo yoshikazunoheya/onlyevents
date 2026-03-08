@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ワイヤーフレーム｜パンドラハーツ同人イベント LP</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #111;
+    --gray-dark: #444;
+    --gray-mid: #888;
+    --gray-light: #bbb;
+    --gray-pale: #ddd;
+    --white: #f5f5f5;
+    --border: 1.5px solid #111;
+    --font: 'Courier New', monospace;
+  }
+
+  body {
+    background: var(--white);
+    font-family: var(--font);
+    color: var(--black);
+    font-size: 12px;
+  }
+
+  /* ラベル共通 */
+  .label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    border: 1px solid var(--gray-dark);
+    padding: 2px 8px;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--gray-dark);
+    margin-bottom: 10px;
+  }
+
+  /* ========== HEADER ========== */
+  header {
+    border-bottom: var(--border);
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: var(--white);
+    z-index: 100;
+  }
+
+  .nav-logo {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+  }
+
+  .nav-links li a {
+    font-size: 10px;
+    text-decoration: none;
+    color: var(--gray-dark);
+    letter-spacing: 0.08em;
+  }
+
+  /* ========== KV ========== */
+  .kv {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 90vh;
+    border-bottom: var(--border);
+  }
+
+  .kv-left {
+    border-right: var(--border);
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .kv-event-title {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--gray-dark);
+    margin-bottom: 16px;
+  }
+
+  .kv-main-title {
+    font-size: 42px;
+    font-weight: bold;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+
+  .kv-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .kv-meta-row {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+  }
+
+  .kv-meta-key {
+    font-size: 9px;
+    color: var(--gray-mid);
+    letter-spacing: 0.1em;
+    min-width: 56px;
+  }
+
+  .kv-meta-val {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+  }
+
+  .cta-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cta-note {
+    font-size: 9px;
+    color: var(--gray-mid);
+    letter-spacing: 0.08em;
+  }
+
+  .btn-primary {
+    border: 2px solid var(--black);
+    background: var(--black);
+    color: var(--white);
+    padding: 14px 24px;
+    font-family: var(--font);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .btn-secondary {
+    border: 1.5px solid var(--black);
+    background: transparent;
+    color: var(--black);
+    padding: 12px 24px;
+    font-family: var(--font);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .kv-right {
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .kv-visual-placeholder {
+    flex: 1;
+    border: 1.5px dashed var(--gray-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    min-height: 320px;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(0,0,0,0.02) 10px,
+      rgba(0,0,0,0.02) 20px
+    );
+  }
+
+  .placeholder-icon {
+    font-size: 32px;
+    color: var(--gray-light);
+  }
+
+  .placeholder-text {
+    font-size: 10px;
+    color: var(--gray-light);
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+
+  .badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    border: 1.5px solid var(--black);
+    padding: 6px 14px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .badge-fill {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  /* ========== MARQUEE ========== */
+  .marquee-bar {
+    border-bottom: var(--border);
+    border-top: var(--border);
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .marquee-inner {
+    display: inline-block;
+    animation: marquee 18s linear infinite;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ========== SECTIONS共通 ========== */
+  section {
+    border-bottom: var(--border);
+    padding: 56px 40px;
+  }
+
+  .section-header {
+    margin-bottom: 32px;
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+
+  .section-subtitle {
+    font-size: 11px;
+    color: var(--gray-mid);
+    letter-spacing: 0.08em;
+  }
+
+  /* ========== ② イベント概要 ========== */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border: var(--border);
+    margin-bottom: 24px;
+  }
+
+  .overview-cell {
+    padding: 20px 24px;
+    border-right: var(--border);
+  }
+
+  .overview-cell:last-child { border-right: none; }
+
+  .overview-cell-key {
+    font-size: 9px;
+    color: var(--gray-mid);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .overview-cell-val {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.4;
+  }
+
+  .notice-box {
+    border: 1.5px solid var(--gray-pale);
+    padding: 16px 20px;
+    background: #fafafa;
+    font-size: 11px;
+    color: var(--gray-dark);
+    line-height: 1.8;
+  }
+
+  /* ========== ③ カウントダウン ========== */
+  .countdown-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .rule-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .rule-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--gray-dark);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--gray-pale);
+  }
+
+  .rule-list li:last-child { border-bottom: none; }
+
+  .rule-num {
+    font-size: 9px;
+    color: var(--gray-light);
+    min-width: 16px;
+    padding-top: 2px;
+  }
+
+  /* ギャラリー・プレースホルダー */
+  .gallery-placeholder {
+    border: 1.5px dashed var(--gray-light);
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 8px,
+      rgba(0,0,0,0.015) 8px, rgba(0,0,0,0.015) 16px
+    );
+  }
+
+  .gallery-placeholder-text {
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+
+  .gallery-placeholder-sub {
+    font-size: 10px;
+    color: var(--gray-mid);
+    text-align: center;
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+  }
+
+  .hashtag-block {
+    border: var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+  }
+
+  .hashtag-text {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+  }
+
+  .hashtag-link {
+    font-size: 9px;
+    color: var(--gray-mid);
+    letter-spacing: 0.1em;
+    text-decoration: underline;
+  }
+
+  /* ========== ④ 絵チャ ========== */
+  .event-card {
+    border: var(--border);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+  }
+
+  .event-card-left {
+    border-right: var(--border);
+    padding: 24px;
+    background: var(--black);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .event-card-time {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: -0.01em;
+  }
+
+  .event-card-right {
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .event-desc {
+    font-size: 11px;
+    color: var(--gray-dark);
+    line-height: 1.8;
+  }
+
+  .cta-conditional {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cta-condition-note {
+    font-size: 9px;
+    color: var(--gray-mid);
+    letter-spacing: 0.08em;
+  }
+
+  /* ========== ⑤ ラジオ ========== */
+  .radio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: var(--border);
+  }
+
+  .radio-act {
+    padding: 28px 32px;
+    border-right: var(--border);
+  }
+
+  .radio-act:last-child { border-right: none; }
+
+  .radio-act-num {
+    font-size: 9px;
+    color: var(--gray-mid);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+
+  .radio-act-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  .radio-act-catchcopy {
+    font-size: 10px;
+    color: var(--gray-dark);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .radio-act-meta {
+    font-size: 10px;
+    color: var(--gray-mid);
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  /* ========== ⑥ タイムスケジュール ========== */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: var(--border);
+    margin-bottom: 0;
+  }
+
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    border-bottom: 1px solid var(--gray-pale);
+  }
+
+  .timeline-row:last-child { border-bottom: none; }
+
+  .timeline-time {
+    border-right: var(--border);
+    padding: 16px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    background: #fafafa;
+  }
+
+  .timeline-content {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+  }
+
+  .timeline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--black);
+    flex-shrink: 0;
+  }
+
+  /* ========== ⑦ 注意事項 ========== */
+  .notice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: var(--border);
+  }
+
+  .notice-item {
+    padding: 14px 24px;
+    font-size: 11px;
+    color: var(--gray-dark);
+    border-bottom: 1px solid var(--gray-pale);
+    line-height: 1.7;
+    display: flex;
+    gap: 12px;
+  }
+
+  .notice-item:last-child { border-bottom: none; }
+
+  .notice-marker {
+    font-size: 9px;
+    color: var(--gray-light);
+    min-width: 16px;
+    padding-top: 2px;
+  }
+
+  /* ========== FOOTER ========== */
+  footer {
+    border-top: var(--border);
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-note {
+    font-size: 10px;
+    color: var(--gray-mid);
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+  }
+
+  /* ========== SP注記 ========== */
+  .sp-note {
+    font-size: 9px;
+    color: var(--gray-light);
+    letter-spacing: 0.1em;
+    margin-top: 8px;
+  }
+
+  /* ========== 番号バッジ ========== */
+  .sec-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid var(--black);
+    font-size: 10px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 768px) {
+
+    header { padding: 10px 16px; }
+    .nav-links { display: none; }
+
+    /* --- KV: SP版ワイヤーと同じ縦積み ---
+       イベント名 → KEY VISUAL → バッジ → 日付/参加費 → CTA
+    */
+    .kv {
+      grid-template-columns: 1fr;
+      min-height: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 左カラム全体をflexで分割 */
+    .kv-left {
+      border-right: none;
+      padding: 0;
+      display: contents; /* 子要素をkvの直接子として扱う */
+    }
+
+    /* ① イベント名：最上部 */
+    .kv-top {
+      order: 1;
+      padding: 24px 20px 16px;
+      border-bottom: none;
+    }
+
+    .kv-main-title { font-size: 28px; margin-bottom: 0; }
+
+    /* ② KV画像・バッジ：イベント名の直後 */
+    .kv-right {
+      order: 2;
+      padding: 0 20px 16px;
+      border-bottom: none;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: flex-start;
+    }
+
+    .kv-visual-placeholder {
+      min-height: 200px;
+      margin-bottom: 0;
+      flex: none;
+    }
+
+    /* ③ 日付・参加費 */
+    .kv-meta {
+      order: 3;
+      padding: 0 20px;
+      margin-bottom: 0;
+    }
+
+    /* ④ CTA */
+    .cta-block {
+      order: 4;
+      padding: 16px 20px 32px;
+      border-bottom: var(--border);
+    }
+
+    /* sections */
+    section { padding: 32px 20px; }
+    .section-title { font-size: 20px; }
+
+    /* ② 概要：縦積み */
+    .overview-grid { grid-template-columns: 1fr; }
+    .overview-cell { border-right: none; border-bottom: var(--border); }
+    .overview-cell:last-child { border-bottom: none; }
+
+    /* ③ カウントダウン：縦積み */
+    .countdown-layout { grid-template-columns: 1fr; gap: 24px; }
+
+    /* ④ 絵チャ：縦積み */
+    .event-card { grid-template-columns: 1fr; }
+    .event-card-left {
+      border-right: none;
+      border-bottom: var(--border);
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px;
+    }
+    .event-card-time { font-size: 18px; }
+
+    /* ⑤ ラジオ：縦積み */
+    .radio-grid { grid-template-columns: 1fr; }
+    .radio-act { border-right: none; border-bottom: var(--border); }
+    .radio-act:last-child { border-bottom: none; }
+
+    /* footer */
+    footer { flex-direction: column; gap: 12px; padding: 20px; }
+    .footer-note:last-child { text-align: left; }
+  }
+
+    /* sections */
+    section { padding: 32px 20px; }
+    .section-title { font-size: 20px; }
+
+    /* ② 概要：縦積み */
+    .overview-grid { grid-template-columns: 1fr; }
+    .overview-cell { border-right: none; border-bottom: var(--border); }
+    .overview-cell:last-child { border-bottom: none; }
+
+    /* ③ カウントダウン：ルール→ギャラリー縦積み */
+    .countdown-layout { grid-template-columns: 1fr; gap: 24px; }
+
+    /* ④ 絵チャ：縦積み */
+    .event-card { grid-template-columns: 1fr; }
+    .event-card-left {
+      border-right: none;
+      border-bottom: var(--border);
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px;
+    }
+    .event-card-time { font-size: 18px; }
+
+    /* ⑤ ラジオ：第一幕→第二幕縦積み */
+    .radio-grid { grid-template-columns: 1fr; }
+    .radio-act { border-right: none; border-bottom: var(--border); }
+    .radio-act:last-child { border-bottom: none; }
+
+    /* footer */
+    footer { flex-direction: column; gap: 12px; padding: 20px; }
+    .footer-note:last-child { text-align: left; }
+  }
+
+  /* ========== SP WIREFRAME ========== */
+  .sp-section {
+    margin-top: 60px;
+    border-top: 3px solid var(--black);
+    padding-top: 40px;
+  }
+
+  .sp-title {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .sp-frame {
+    max-width: 375px;
+    margin: 0 auto;
+    border: 2px solid var(--black);
+  }
+
+  .sp-kv {
+    padding: 32px 24px;
+    border-bottom: var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sp-kv-visual {
+    border: 1.5px dashed var(--gray-light);
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--gray-light);
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 8px,
+      rgba(0,0,0,0.015) 8px, rgba(0,0,0,0.015) 16px
+    );
+  }
+
+  .sp-section-inner {
+    padding: 24px;
+    border-bottom: var(--border);
+  }
+
+  .sp-section-inner:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<!-- ======== HEADER ======== -->
+<header>
+  <div class="nav-logo">PANDORA HEARTS EVENT</div>
+  <ul class="nav-links">
+    <li><a href="#">イベント概要</a></li>
+    <li><a href="#">企画</a></li>
+    <li><a href="#">タイムスケジュール</a></li>
+    <li><a href="#">注意事項</a></li>
+  </ul>
+</header>
+
+<!-- ======== ① KV ======== -->
+<section class="kv" style="padding:0; border-bottom: var(--border);">
+
+  <!-- 左カラム：PC→イベント名・メタ・CTA / SP→イベント名・メタ・CTA（下） -->
+  <div class="kv-left">
+
+    <!-- ① イベント名（SP・PCともに最上部） -->
+    <div class="kv-top">
+      <div class="kv-event-title">PANDORA HEARTS FAN EVENT 2025</div>
+      <div class="kv-main-title">イベント名<br>（仮）</div>
+    </div>
+
+    <!-- ② 日付・参加費（SPではKV画像の下） -->
+    <div class="kv-meta">
+      <div class="kv-meta-row">
+        <span class="kv-meta-key">DATE</span>
+        <span class="kv-meta-val">2025.08.30</span>
+      </div>
+      <div class="kv-meta-row">
+        <span class="kv-meta-key">VENUE</span>
+        <span class="kv-meta-val">ピクスク（オンライン）</span>
+      </div>
+      <div class="kv-meta-row">
+        <span class="kv-meta-key">TICKET</span>
+        <span class="kv-meta-val">¥750</span>
+      </div>
+    </div>
+
+    <!-- ③ CTA -->
+    <div class="cta-block">
+      <div class="cta-note">※ 期間によってボタンが自動切替（JS）</div>
+      <div class="btn-primary">【〜7/31】サークル参加申込はこちら →</div>
+      <div class="btn-secondary">カウントダウン企画に参加する →</div>
+    </div>
+
+  </div>
+
+  <!-- 右カラム：PC→キービジュアル・バッジ / SP→イベント名直後に表示 -->
+  <div class="kv-right">
+    <div class="kv-visual-placeholder">
+      <div class="placeholder-icon">⬚</div>
+      <div class="placeholder-text">KEY VISUAL<br>メインビジュアル<br>（ティザーと同世界観）</div>
+    </div>
+    <div class="badges">
+      <div class="badge badge-fill">絵チャ</div>
+      <div class="badge badge-fill">ラジオ</div>
+      <div class="badge">カウントダウン企画</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ======== MARQUEE ======== -->
+<div class="marquee-bar">
+  <span class="marquee-inner">
+    ✦ PANDORA HEARTS FAN EVENT ✦ 2025.08.30 ✦ ONLINE / PICTSQUARE ✦ 参加費750円 ✦ 絵チャ ✦ ラジオ ✦ カウントダウン企画 ✦ PANDORA HEARTS FAN EVENT ✦ 2025.08.30 ✦ ONLINE / PICTSQUARE ✦ 参加費750円 ✦ 絵チャ ✦ ラジオ ✦ カウントダウン企画 ✦
+  </span>
+</div>
+
+<!-- ======== ② イベント概要 ======== -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">SECTION 02</div>
+    <h2 class="section-title"><span class="sec-num">②</span>イベント概要</h2>
+    <p class="section-subtitle">EVENT OVERVIEW</p>
+  </div>
+
+  <div class="overview-grid">
+    <div class="overview-cell">
+      <div class="overview-cell-key">開催日時</div>
+      <div class="overview-cell-val">2025年8月30日（土）<br>10:00〜22:00</div>
+    </div>
+    <div class="overview-cell">
+      <div class="overview-cell-key">開催場所</div>
+      <div class="overview-cell-val">ピクスク（オンライン）<br><span style="font-size:10px;color:#888;">事前アカウント登録必須</span></div>
+    </div>
+    <div class="overview-cell">
+      <div class="overview-cell-key">参加費</div>
+      <div class="overview-cell-val">¥750<br><span style="font-size:10px;color:#888;">当日ピクスクにて</span></div>
+    </div>
+  </div>
+
+  <div class="notice-box">
+    本イベントは個人主催の二次創作同人イベントです。版権元・関係者の皆様とは一切関係ありません。<br>
+    出品いただく作品はPandoraHearts関連のもののみです。成人向け作品は必ずワンクッションをお願いします。
+  </div>
+</section>
+
+<!-- ======== ③ カウントダウン企画 ======== -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">SECTION 03</div>
+    <h2 class="section-title"><span class="sec-num">③</span>カウントダウン企画</h2>
+    <p class="section-subtitle">COUNTDOWN CAMPAIGN — 終わりではなく始まりへ カウントダウンで繋がろう</p>
+  </div>
+
+  <div class="countdown-layout">
+
+    <!-- ルール説明 -->
+    <div>
+      <div class="label">RULE</div>
+      <ul class="rule-list">
+        <li><span class="rule-num">01</span>参加形式：イラスト or 小説</li>
+        <li><span class="rule-num">02</span>公式公表後ならSNSへのアップOK</li>
+        <li><span class="rule-num">03</span>投稿時に担当残り日数を記載すること<br>（イベントまで残り〇日）</li>
+        <li><span class="rule-num">04</span>担当日付・締切は運営が決定</li>
+        <li><span class="rule-num">05</span>ネタバレ禁止：最終巻（オズたちの最後）</li>
+        <li><span class="rule-num">06</span>攻撃的発言禁止</li>
+      </ul>
+
+      <div style="margin-top:24px;">
+        <div class="hashtag-block">
+          <div class="hashtag-text">#タグ名（仮）</div>
+          <div class="hashtag-link">X で検索する →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 作品ギャラリー -->
+    <div>
+      <div class="label">GALLERY — 作品募集中→スライダー表示に自動切替</div>
+      <div class="gallery-placeholder">
+        <div class="placeholder-icon" style="font-size:40px;">🖼</div>
+        <div class="gallery-placeholder-text">COUNTDOWN GALLERY</div>
+        <div class="gallery-placeholder-sub">
+          現在作品を募集中！<br>
+          カウントダウン企画に参加してみよう
+        </div>
+        <div class="btn-primary" style="margin-top:8px;">参加申込はこちら →</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======== ④ 絵チャ ======== -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">SECTION 04</div>
+    <h2 class="section-title"><span class="sec-num">④</span>当日企画：絵チャ</h2>
+    <p class="section-subtitle">DRAWING CHAT — MagicalDraw 使用</p>
+  </div>
+
+  <div class="event-card">
+    <div class="event-card-left">
+      <div class="label" style="color:#888;">開催時間</div>
+      <div class="event-card-time">10:00〜<br>22:00</div>
+      <div style="font-size:10px; color:#888; line-height:1.6;">出入り自由<br>登録不要<br>ログイン不要</div>
+    </div>
+    <div class="event-card-right">
+      <div class="event-desc">
+        MagicalDrawを使用したお絵描きチャットスペースです。<br>
+        登録なしでどなたでも参加できます。ログインしなくても遊べます。<br>
+        当日は専用URLからアクセスしてください。
+      </div>
+      <div class="cta-conditional">
+        <div class="btn-primary" style="flex:1;">絵チャに参加する →</div>
+        <div class="cta-condition-note">※ 当日（8/30）のみ<br>ボタン表示</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ⑤ ラジオ ======== -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">SECTION 05</div>
+    <h2 class="section-title"><span class="sec-num">⑤</span>当日企画：ラジオ</h2>
+    <p class="section-subtitle">RADIO — ウェルワンアカウントのXスペースにて配信</p>
+  </div>
+
+  <div class="radio-grid">
+
+    <div class="radio-act">
+      <div class="radio-act-num">FIRST ACT / 15:00〜15:45</div>
+      <div class="radio-act-title">アヴィスで推し語り♪</div>
+      <div class="radio-act-catchcopy">みんなの回答が栄養になる！<br>運営が勝手に語り尽くし回！</div>
+      <div class="radio-act-meta">
+        アンケート募集：8/1〜8/21<br>
+        運営チームが頂いたアンケートをもとに<br>パンドラについて熱く語ります！
+      </div>
+      <div class="cta-conditional">
+        <div class="btn-secondary" style="flex:1;">アンケートに答える →</div>
+        <div class="cta-condition-note">※ 8/1〜8/21<br>のみ表示</div>
+      </div>
+    </div>
+
+    <div class="radio-act">
+      <div class="radio-act-num">SECOND ACT / 20:00〜21:30</div>
+      <div class="radio-act-title">集えパンクラ！<br>熱く語りあおう！</div>
+      <div class="radio-act-catchcopy">パンクラによるパンクラの為の<br>パンクラ会へようこそ！</div>
+      <div class="radio-act-meta">
+        参加募集：8/1〜8/21<br>
+        リスナー参加型ラジオ。当日飛び込み参加不可。<br>欠席時はXのDMにて事前連絡を。
+      </div>
+      <div class="cta-conditional">
+        <div class="btn-primary" style="flex:1;">参加申込する →</div>
+        <div class="cta-condition-note">※ 8/1〜8/21<br>のみ表示</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======== ⑥ タイムスケジュール ======== -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">SECTION 06</div>
+    <h2 class="section-title"><span class="sec-num">⑥</span>当日タイムスケジュール</h2>
+    <p class="section-subtitle">TIME SCHEDULE — 2025.08.30</p>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-row">
+      <div class="timeline-time">10:00</div>
+      <div class="timeline-content"><div class="timeline-dot"></div>絵チャ開始（出入り自由・22時まで）</div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-time">15:00</div>
+      <div class="timeline-content"><div class="timeline-dot"></div>ラジオ第一幕「アヴィスで推し語り♪」〜15:45</div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-time">20:00</div>
+      <div class="timeline-content"><div class="timeline-dot"></div>ラジオ第二幕「集えパンクラ！」〜最大21:30</div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-time">22:00</div>
+      <div class="timeline-content"><div class="timeline-dot" style="background:var(--gray-light);"></div>絵チャ終了</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ⑦ 注意事項 ======== -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">SECTION 07</div>
+    <h2 class="section-title"><span class="sec-num">⑦</span>注意事項</h2>
+    <p class="section-subtitle">NOTICE</p>
+  </div>
+
+  <div class="notice-list">
+    <div class="notice-item"><span class="notice-marker">—</span>本イベントはPandoraHearts関連の二次創作のみ対象です。他作品の出品・展示はご遠慮ください。</div>
+    <div class="notice-item"><span class="notice-marker">—</span>成人向け作品を頒布・展示する場合は必ず明記し、ワンクッションの配慮をお願いします。</div>
+    <div class="notice-item"><span class="notice-marker">—</span>最終巻（オズたちの最後）のネタバレ投稿は禁止です。</div>
+    <div class="notice-item"><span class="notice-marker">—</span>他の参加者・原作に対する攻撃的な発言は禁止です。</div>
+    <div class="notice-item"><span class="notice-marker">—</span>本イベントは個人主催の二次創作同人イベントです。版権元・関係者とは一切関係ありません。</div>
+  </div>
+</section>
+
+<!-- ======== FOOTER ======== -->
+<footer>
+  <div class="footer-note">
+    PANDORA HEARTS FAN EVENT 2025<br>
+    個人主催 二次創作同人イベント
+  </div>
+  <div class="footer-note" style="text-align:right;">
+    X（公式アカウント）<br>
+    お問い合わせ：X DM
+  </div>
+</footer>
+
+
+
+</body>
+</html>
