@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>タスク分担表｜パンドラハーツ同人イベント</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #111;
+    --gray-dark: #444;
+    --gray-mid: #888;
+    --gray-light: #bbb;
+    --gray-pale: #ddd;
+    --white: #f5f5f5;
+    --border: 1.5px solid #111;
+    --font: 'Courier New', monospace;
+  }
+
+  body {
+    background: var(--white);
+    font-family: var(--font);
+    color: var(--black);
+    font-size: 12px;
+    padding: 24px 20px 48px;
+  }
+
+  .page-header {
+    border-bottom: 3px solid var(--black);
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+  }
+
+  .page-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--gray-mid);
+    margin-bottom: 6px;
+  }
+
+  .page-title {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: -0.01em;
+  }
+
+  .page-sub {
+    font-size: 10px;
+    color: var(--gray-mid);
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+
+  /* セクション */
+  .section {
+    margin-bottom: 32px;
+  }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--gray-mid);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-pale);
+  }
+
+  /* タスクテーブル */
+  .task-table {
+    width: 100%;
+    border: var(--border);
+    border-collapse: collapse;
+  }
+
+  .task-table thead tr {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .task-table thead th {
+    padding: 10px 14px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-align: left;
+    font-weight: normal;
+    border-right: 1px solid #333;
+  }
+
+  .task-table thead th:last-child {
+    border-right: none;
+  }
+
+  .task-table tbody tr {
+    border-bottom: 1px solid var(--gray-pale);
+  }
+
+  .task-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .task-table tbody tr:hover {
+    background: #f0f0f0;
+  }
+
+  .task-table td {
+    padding: 12px 14px;
+    font-size: 11px;
+    border-right: 1px solid var(--gray-pale);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .task-table td:last-child {
+    border-right: none;
+  }
+
+  /* 期限バッジ */
+  .deadline {
+    display: inline-block;
+    border: 1px solid var(--black);
+    padding: 2px 8px;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .deadline.urgent {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  /* 担当バッジ */
+  .owner {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border: 1px solid var(--gray-dark);
+    white-space: nowrap;
+  }
+
+  .owner.me {
+    background: var(--black);
+    color: var(--white);
+    border-color: var(--black);
+  }
+
+  /* ステータス */
+  .status {
+    font-size: 9px;
+    color: var(--gray-mid);
+    letter-spacing: 0.06em;
+  }
+
+  .status.pending {
+    color: var(--black);
+    font-weight: bold;
+  }
+
+  .status.waiting {
+    color: var(--gray-mid);
+  }
+
+  /* 注記 */
+  .note {
+    font-size: 10px;
+    color: var(--gray-mid);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* 今すぐやること強調 */
+  .now-block {
+    border: 2px solid var(--black);
+    padding: 16px;
+    margin-bottom: 32px;
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .now-block-title {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+    color: var(--gray-light);
+  }
+
+  .now-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .now-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .now-num {
+    font-size: 10px;
+    color: var(--gray-light);
+    min-width: 18px;
+    padding-top: 1px;
+  }
+
+  /* レスポンシブ */
+  @media (max-width: 600px) {
+    body { padding: 16px 14px 40px; }
+    .page-title { font-size: 18px; }
+
+    .task-table thead th,
+    .task-table td {
+      padding: 10px 10px;
+      font-size: 10px;
+    }
+
+    /* SP: 担当列を非表示にしてセクションで分ける */
+    .col-owner { display: none; }
+    .col-status { display: none; }
+
+    .deadline { font-size: 8px; padding: 2px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-label">PANDORA HEARTS FAN EVENT 2025 — DOCUMENT 02</div>
+  <div class="page-title">タスク分担表</div>
+  <div class="page-sub">TASK LIST / 🙋 あなた（主催側）｜ 🙋‍♀️ 私（サイト担当）</div>
+</div>
+
+<!-- 今すぐ教えてほしいこと -->
+<div class="now-block">
+  <div class="now-block-title">❓ 今すぐ教えてほしいこと（3つだけ！）</div>
+  <ul class="now-list">
+    <li><span class="now-num">01</span>カウントダウン企画のハッシュタグ名、どうする？</li>
+    <li><span class="now-num">02</span>アンケート＆ラジオ参加申込用のGoogleフォーム、作れそう？（難しければ私が作るよ）</li>
+    <li><span class="now-num">03</span>参加者への担当日付の通知、どうやって連絡する？（DM？フォームの自動返信？）</li>
+  </ul>
+</div>
+
+<!-- PHASE 1 -->
+<div class="section">
+  <div class="section-label">PHASE 01 ／ 〜7/31 ／ サークル集める・企画盛り上げる期間</div>
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th style="width:40%;">タスク</th>
+        <th class="col-owner" style="width:15%;">担当</th>
+        <th style="width:20%;">期限</th>
+        <th class="col-status" style="width:25%;">備考</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>カウントダウン企画のハッシュタグ名を決める</td>
+        <td class="col-owner"><span class="owner me">🙋 あなた</span></td>
+        <td><span class="deadline urgent">今すぐ</span></td>
+        <td class="col-status"><span class="status pending">● 未決定</span></td>
+      </tr>
+      <tr>
+        <td>アンケート用Googleフォームを作る</td>
+        <td class="col-owner"><span class="owner me">🙋 あなた</span></td>
+        <td><span class="deadline urgent">7/31まで</span></td>
+        <td class="col-status"><span class="status pending">● 未着手</span><div class="note">難しければ私が作る</div></td>
+      </tr>
+      <tr>
+        <td>ラジオ参加申込用Googleフォームを作る</td>
+        <td class="col-owner"><span class="owner me">🙋 あなた</span></td>
+        <td><span class="deadline urgent">7/31まで</span></td>
+        <td class="col-status"><span class="status pending">● 未着手</span><div class="note">難しければ私が作る</div></td>
+      </tr>
+      <tr>
+        <td>参加者への担当日付の割り振り・通知</td>
+        <td class="col-owner"><span class="owner me">🙋 あなた</span></td>
+        <td><span class="deadline">7/15まで（仮）</span></td>
+        <td class="col-status"><span class="status waiting">○ 方法未定</span></td>
+      </tr>
+      <tr>
+        <td>本サイトをStudioで構築</td>
+        <td class="col-owner"><span class="owner">🙋‍♀️ 私</span></td>
+        <td><span class="deadline">7/31まで</span></td>
+        <td class="col-status"><span class="status pending">● 進行中</span></td>
+      </tr>
+      <tr>
+        <td>ハッシュタグ案内ページ・CTA自動切替の実装</td>
+        <td class="col-owner"><span class="owner">🙋‍♀️ 私</span></td>
+        <td><span class="deadline">7/31まで</span></td>
+        <td class="col-status"><span class="status waiting">○ ハッシュタグ名待ち</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PHASE 2 -->
+<div class="section">
+  <div class="section-label">PHASE 02 ／ 8/1〜8/21 ／ ラジオ参加者・アンケート回答を集める期間</div>
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th style="width:40%;">タスク</th>
+        <th class="col-owner" style="width:15%;">担当</th>
+        <th style="width:20%;">期限・頻度</th>
+        <th class="col-status" style="width:25%;">備考</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>投稿作品を精査してOKリストを私に送る</td>
+        <td class="col-owner"><span class="owner me">🙋 あなた</span></td>
+        <td><span class="deadline">毎週月曜</span></td>
+        <td class="col-status"><span class="status">主催と一緒に確認</span></td>
+      </tr>
+      <tr>
+        <td>アンケート・参加申込の受付管理</td>
+        <td class="col-owner"><span class="owner me">🙋 あなた</span></td>
+        <td><span class="deadline">8/21まで</span></td>
+        <td class="col-status"><span class="status">Googleフォームで管理</span></td>
+      </tr>
+      <tr>
+        <td>OKリストの作品をサイトに反映・タイマー設定</td>
+        <td class="col-owner"><span class="owner">🙋‍♀️ 私</span></td>
+        <td><span class="deadline">毎週月曜中</span></td>
+        <td class="col-status"><span class="status">OKリスト受け取り次第</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PHASE 3 -->
+<div class="section">
+  <div class="section-label">PHASE 03 ／ 8/22〜8/29 ／ 当日準備期間</div>
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th style="width:40%;">タスク</th>
+        <th class="col-owner" style="width:15%;">担当</th>
+        <th style="width:20%;">期限</th>
+        <th class="col-status" style="width:25%;">備考</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ピクスクアカウント登録をSNSで周知</td>
+        <td class="col-owner"><span class="owner me">🙋 あなた</span></td>
+        <td><span class="deadline">8/22〜</span></td>
+        <td class="col-status"><span class="status">X（公式アカウント）から</span></td>
+      </tr>
+      <tr>
+        <td>CTAボタン切替の表示確認</td>
+        <td class="col-owner"><span class="owner">🙋‍♀️ 私</span></td>
+        <td><span class="deadline">8/22</span></td>
+        <td class="col-status"><span class="status">自動切替のチェック</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PHASE 4 当日 -->
+<div class="section">
+  <div class="section-label">PHASE 04 ／ 8/30 ／ 当日</div>
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th style="width:40%;">タスク</th>
+        <th class="col-owner" style="width:15%;">担当</th>
+        <th style="width:20%;">時間</th>
+        <th class="col-status" style="width:25%;">備考</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>絵チャ・ラジオの運営</td>
+        <td class="col-owner"><span class="owner me">🙋 あなた</span></td>
+        <td><span class="deadline urgent">当日</span></td>
+        <td class="col-status"><span class="status">たのんだ！🎉</span></td>
+      </tr>
+      <tr>
+        <td>サイトCTAの表示確認・トラブル対応</td>
+        <td class="col-owner"><span class="owner">🙋‍♀️ 私</span></td>
+        <td><span class="deadline">10:00頃</span></td>
+        <td class="col-status"><span class="status">念のため確認する</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PHASE 5 アーカイブ -->
+<div class="section">
+  <div class="section-label">PHASE 05 ／ 8/31〜 ／ アーカイブ</div>
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th style="width:40%;">タスク</th>
+        <th class="col-owner" style="width:15%;">担当</th>
+        <th style="width:20%;">期限</th>
+        <th class="col-status" style="width:25%;">備考</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>掲載したい作品の最終リストを私に送る</td>
+        <td class="col-owner"><span class="owner me">🙋 あなた</span></td>
+        <td><span class="deadline">イベント後</span></td>
+        <td class="col-status"><span class="status">スプシで共有してくれればOK</span></td>
+      </tr>
+      <tr>
+        <td>アーカイブギャラリーをサイトに反映</td>
+        <td class="col-owner"><span class="owner">🙋‍♀️ 私</span></td>
+        <td><span class="deadline">リスト受取後</span></td>
+        <td class="col-status"><span class="status">スライダー形式で掲載</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

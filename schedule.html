@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全体スケジュール｜パンドラハーツ同人イベント</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #111;
+    --gray-dark: #444;
+    --gray-mid: #888;
+    --gray-light: #bbb;
+    --gray-pale: #ddd;
+    --white: #f5f5f5;
+    --border: 1.5px solid #111;
+    --font: 'Courier New', monospace;
+  }
+
+  body {
+    background: var(--white);
+    font-family: var(--font);
+    color: var(--black);
+    font-size: 12px;
+    padding: 24px 20px 48px;
+  }
+
+  /* ヘッダー */
+  .page-header {
+    border-bottom: 3px solid var(--black);
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+  }
+
+  .page-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--gray-mid);
+    margin-bottom: 6px;
+  }
+
+  .page-title {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: -0.01em;
+  }
+
+  .page-sub {
+    font-size: 10px;
+    color: var(--gray-mid);
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+
+  /* フェーズブロック */
+  .phase {
+    border: var(--border);
+    margin-bottom: 16px;
+  }
+
+  .phase-header {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    border-bottom: var(--border);
+  }
+
+  .phase-period {
+    background: var(--black);
+    color: var(--white);
+    padding: 14px 16px;
+    border-right: var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .phase-period-label {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: var(--gray-light);
+  }
+
+  .phase-period-date {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1.3;
+  }
+
+  .phase-goal {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .phase-goal-label {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: var(--gray-mid);
+  }
+
+  .phase-goal-text {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1.4;
+  }
+
+  /* タスク行 */
+  .phase-tasks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .task-col {
+    padding: 16px;
+  }
+
+  .task-col:first-child {
+    border-right: var(--border);
+  }
+
+  .task-col-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--gray-mid);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .task-col-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-pale);
+  }
+
+  .task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .task-list li {
+    font-size: 11px;
+    color: var(--gray-dark);
+    line-height: 1.5;
+    padding-left: 12px;
+    position: relative;
+  }
+
+  .task-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gray-light);
+    font-size: 9px;
+  }
+
+  .task-list li.highlight {
+    color: var(--black);
+    font-weight: bold;
+  }
+
+  .task-list li.highlight::before {
+    content: '▶';
+    font-size: 8px;
+    color: var(--black);
+  }
+
+  /* 当日フェーズ（反転） */
+  .phase.today .phase-header {
+    background: var(--black);
+  }
+
+  .phase.today .phase-goal {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .phase.today .phase-goal-label {
+    color: var(--gray-light);
+  }
+
+  .phase.today .phase-goal-text {
+    color: var(--white);
+  }
+
+  /* 凡例 */
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: var(--gray-dark);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid var(--black);
+  }
+
+  .legend-dot.fill { background: var(--black); }
+
+  /* レスポンシブ */
+  @media (max-width: 600px) {
+    body { padding: 16px 14px 40px; }
+
+    .page-title { font-size: 18px; }
+
+    .phase-header {
+      grid-template-columns: 100px 1fr;
+    }
+
+    .phase-period-date { font-size: 11px; }
+    .phase-goal-text { font-size: 12px; }
+
+    .phase-tasks {
+      grid-template-columns: 1fr;
+    }
+
+    .task-col:first-child {
+      border-right: none;
+      border-bottom: var(--border);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-label">PANDORA HEARTS FAN EVENT 2025 — DOCUMENT 01</div>
+  <div class="page-title">全体スケジュール</div>
+  <div class="page-sub">OVERALL SCHEDULE / イベント当日：2025.08.30</div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot fill"></div>あなた（主催側）がやること</div>
+  <div class="legend-item"><div class="legend-dot"></div>私（サイト担当）がやること</div>
+</div>
+
+<!-- PHASE 1 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-period">
+      <div class="phase-period-label">PHASE 01</div>
+      <div class="phase-period-date">〜7/31</div>
+    </div>
+    <div class="phase-goal">
+      <div class="phase-goal-label">この期間の目的</div>
+      <div class="phase-goal-text">サークル参加者を集める<br>カウントダウン企画を盛り上げる</div>
+    </div>
+  </div>
+  <div class="phase-tasks">
+    <div class="task-col">
+      <div class="task-col-label">🙋 あなたがやること</div>
+      <ul class="task-list">
+        <li class="highlight">カウントダウン企画のハッシュタグ名を決める</li>
+        <li class="highlight">アンケート用Googleフォームを作る</li>
+        <li class="highlight">ラジオ参加申込用Googleフォームを作る</li>
+        <li>参加者への担当日付の割り振り</li>
+        <li>参加者への日付通知（DM or フォーム自動返信）</li>
+      </ul>
+    </div>
+    <div class="task-col">
+      <div class="task-col-label">🙋‍♀️ 私がやること</div>
+      <ul class="task-list">
+        <li>本サイトをStudioで構築</li>
+        <li>ハッシュタグ案内ページの設置</li>
+        <li>CTAボタンの自動切替（JS）実装</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-period">
+      <div class="phase-period-label">PHASE 02</div>
+      <div class="phase-period-date">8/1〜<br>8/21</div>
+    </div>
+    <div class="phase-goal">
+      <div class="phase-goal-label">この期間の目的</div>
+      <div class="phase-goal-text">ラジオ参加者・アンケート回答を集める<br>カウントダウン作品を反映し続ける</div>
+    </div>
+  </div>
+  <div class="phase-tasks">
+    <div class="task-col">
+      <div class="task-col-label">🙋 あなたがやること</div>
+      <ul class="task-list">
+        <li class="highlight">毎週月曜：投稿作品を精査してOKリストを私に送る</li>
+        <li>アンケート・参加申込の受付管理</li>
+      </ul>
+    </div>
+    <div class="task-col">
+      <div class="task-col-label">🙋‍♀️ 私がやること</div>
+      <ul class="task-list">
+        <li>毎週月曜中：OKリストの作品をサイトに反映</li>
+        <li>タイマー設定で自動公開</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-period">
+      <div class="phase-period-label">PHASE 03</div>
+      <div class="phase-period-date">8/22〜<br>8/29</div>
+    </div>
+    <div class="phase-goal">
+      <div class="phase-goal-label">この期間の目的</div>
+      <div class="phase-goal-text">当日に向けた参加者の準備を促す</div>
+    </div>
+  </div>
+  <div class="phase-tasks">
+    <div class="task-col">
+      <div class="task-col-label">🙋 あなたがやること</div>
+      <ul class="task-list">
+        <li>SNSでピクスクアカウント登録の周知</li>
+      </ul>
+    </div>
+    <div class="task-col">
+      <div class="task-col-label">🙋‍♀️ 私がやること</div>
+      <ul class="task-list">
+        <li>CTA「ピクスクでアカウント登録する」に自動切替確認</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 4 当日 -->
+<div class="phase today">
+  <div class="phase-header">
+    <div class="phase-period">
+      <div class="phase-period-label">PHASE 04</div>
+      <div class="phase-period-date">8/30<br>当日！</div>
+    </div>
+    <div class="phase-goal">
+      <div class="phase-goal-label">この期間の目的</div>
+      <div class="phase-goal-text">絵チャ・ラジオへの参加導線を全面に出す</div>
+    </div>
+  </div>
+  <div class="phase-tasks">
+    <div class="task-col">
+      <div class="task-col-label">🙋 あなたがやること</div>
+      <ul class="task-list">
+        <li class="highlight">ラジオ・絵チャの運営</li>
+        <li>参加者対応</li>
+      </ul>
+    </div>
+    <div class="task-col">
+      <div class="task-col-label">🙋‍♀️ 私がやること</div>
+      <ul class="task-list">
+        <li>CTAボタン切替の表示確認</li>
+        <li>当日トラブル対応（サイト側）</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 5 アーカイブ -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-period">
+      <div class="phase-period-label">PHASE 05</div>
+      <div class="phase-period-date">8/31〜</div>
+    </div>
+    <div class="phase-goal">
+      <div class="phase-goal-label">この期間の目的</div>
+      <div class="phase-goal-text">カウントダウン作品をアーカイブ展示する</div>
+    </div>
+  </div>
+  <div class="phase-tasks">
+    <div class="task-col">
+      <div class="task-col-label">🙋 あなたがやること</div>
+      <ul class="task-list">
+        <li>掲載したい作品の最終リストを私に送る</li>
+      </ul>
+    </div>
+    <div class="task-col">
+      <div class="task-col-label">🙋‍♀️ 私がやること</div>
+      <ul class="task-list">
+        <li>アーカイブギャラリーをサイトに反映</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
